@@ -20,7 +20,7 @@ random.seed()
 unoBaudRate = 9600
 unoCOM = 'COM10'                # COM port the Uno is connected to on Windows
 unotty = '/dev/ttyACM0'         # tty device the Uno is connected to on Linux
-commandInterval = 0.05             # how often commands are sent, in seconds
+commandInterval = 0.2             # how often commands are sent, in seconds
 
 
 # Class code shamelessly lifted from: https://code.i-harness.com/en/q/bdbf0b
@@ -43,10 +43,10 @@ class perpetualTimer:
         self.thread.cancel()
 
 
-if platform.system() is "Linux":
+if platform.system() == "Linux":
     arduinoSerialData = serial.Serial(unotty, unoBaudRate)
 
-if platform.system() is "Windows":
+if platform.system() == "Windows":
     arduinoSerialData = serial.Serial(unoCOM, unoBaudRate)
 
 
@@ -55,13 +55,13 @@ def send_command():
 
     # generate command for the arm; out-of-bounds entries will be handled by the sketch
     command = "<" + str(random.randint(0, 5)) + "," + "1" + ","
-    command += str(random.randrange(-10, 11, 20)) + ">"
+    command += str(random.randrange(-5, 6, 10)) + ">"
     print(command)
 
     arduinoSerialData.write(command.encode('utf-8'))
 
 
-if __name__ is "__main__":
+if __name__ == '__main__':
     commandTimer = perpetualTimer(commandInterval, send_command)
 
     # Only send the command every 5 seconds
